@@ -1,0 +1,71 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Management - Admin</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="container">
+    <h1>Course Management - Admin Panel</h1>
+    <div class="form-section">
+        <h2>Add New Admin</h2>
+        <form id="addAdminForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Add Admin</button>
+        </form>
+    </div>
+    <div class="form-section">
+        <h2>Update Admin</h2>
+        <form id="updateAdminForm">
+            <label for="adminIdUpdate">Admin ID:</label>
+            <input type="number" id="adminIdUpdate" name="adminIdUpdate" required>
+
+            <label for="usernameUpdate">New Username:</label>
+            <input type="text" id="usernameUpdate" name="usernameUpdate">
+
+            <label for="passwordUpdate">New Password:</label>
+            <input type="password" id="passwordUpdate" name="passwordUpdate">
+
+            <button type="submit">Update Admin</button>
+        </form>
+    </div>
+    <div class="admin-list-section">
+        <h2>All Admins</h2>
+        <button id="loadAdmins">Load Admins</button>
+        <ul id="adminList"></ul>
+    </div>
+    <div class="enrollment-section">
+        <h2>Enroll/Unenroll Students</h2>
+        <form id="enrollForm">
+            <label for="studentIdEnroll">Student ID:</label>
+            <input type="number" id="studentIdEnroll" name="studentIdEnroll" required>
+
+            <label for="courseIdEnroll">Course ID:</label>
+            <input type="number" id="courseIdEnroll" name="courseIdEnroll" required>
+
+            <button type="submit">Enroll Student</button>
+        </form>
+        <form id="unenrollForm">
+            <label for="studentIdUnenroll">Student ID:</label>
+            <input type="number" id="studentIdUnenroll" name="studentIdUnenroll" required>
+
+            <label for="courseIdUnenroll">Course ID:</label>
+            <input type="number" id="courseIdUnenroll" name="courseIdUnenroll" required>
+
+            <button type="submit">Unenroll Student</button>
+        </form>
+    </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

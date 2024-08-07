@@ -1,66 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Course Management System</title>-->
-<!--    <link rel="stylesheet" href="style.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Course Management System</h1>-->
-
-<!--<section id="admin-section">-->
-<!--    <h2>Admin Management</h2>-->
-<!--    <div>-->
-<!--        <input type="text" id="admin-username" placeholder="Username">-->
-<!--        <input type="password" id="admin-password" placeholder="Password">-->
-<!--        <button onclick="addAdmin()">Add Admin</button>-->
-<!--    </div>-->
-<!--    <ul id="admin-list"></ul>-->
-<!--</section>-->
-
-<!--<section id="student-section">-->
-<!--    <h2>Student Management</h2>-->
-<!--    <div>-->
-<!--        <input type="text" id="student-username" placeholder="Username">-->
-<!--        <input type="password" id="student-password" placeholder="Password">-->
-<!--        <input type="text" id="student-first-name" placeholder="First Name">-->
-<!--        <input type="text" id="student-last-name" placeholder="Last Name">-->
-<!--        <input type="email" id="student-email" placeholder="Email">-->
-<!--        <button onclick="addStudent()">Add Student</button>-->
-<!--    </div>-->
-<!--    <ul id="student-list"></ul>-->
-<!--</section>-->
-
-<!--<section id="course-section">-->
-<!--    <h2>Course Management</h2>-->
-<!--    <div>-->
-<!--        <input type="text" id="course-name" placeholder="Course Name">-->
-<!--        <input type="text" id="course-description" placeholder="Description">-->
-<!--        <input type="text" id="course-duration" placeholder="Duration (months)">-->
-<!--        <button onclick="addCourse()">Add Course</button>-->
-<!--    </div>-->
-<!--    <ul id="course-list"></ul>-->
-<!--</section>-->
-
-<!--<section id="teacher-section">-->
-<!--    <h2>Teacher Management</h2>-->
-<!--    <div>-->
-<!--        <input type="text" id="teacher-username" placeholder="Username">-->
-<!--        <input type="password" id="teacher-password" placeholder="Password">-->
-<!--        <input type="text" id="teacher-first-name" placeholder="First Name">-->
-<!--        <input type="text" id="teacher-last-name" placeholder="Last Name">-->
-<!--        <input type="email" id="teacher-email" placeholder="Email">-->
-<!--        <button onclick="addTeacher()">Add Teacher</button>-->
-<!--    </div>-->
-<!--    <ul id="teacher-list"></ul>-->
-<!--</section>-->
-
-<!--<script src="javascript.js"></script>-->
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,53 +9,13 @@
 <body>
 <h1>Course Management System</h1>
 <div class="buttons">
-    <button id="showAdmins">Admins</button>
-    <button id="showStudents">Students</button>
-    <button id="showCourses">Courses</button>
-    <button id="showTeachers">Teachers</button>
+    <a href="admin.html"><button id="showAdmins">Admins</button></a>
+    <a href="course.html"><button id="showStudents">Courses</button></a>
+    <a href="student.html"><button id="showCourses">Students</button></a>
+    <a href="teacher.html"><button id="showTeachers">Teachers</button></a>
 </div>
 
-<div id="adminSection" class="section"></div>
-<div id="studentSection" class="section"></div>
-<div id="courseSection" class="section"></div>
-<div id="teacherSection" class="section"></div>
 
-<script src="js/javascript.js.js"></script>
+<script src="js/javascript.js"></script>
 </body>
 </html>
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Course Management - Admin</title>-->
-<!--    <link rel="stylesheet" href="css/style.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container">-->
-<!--    <h1>Course Management - Admin Panel</h1>-->
-<!--    <div class="form-section">-->
-<!--        <h2>Add New Admin</h2>-->
-<!--        <form id="addAdminForm">-->
-<!--            <label for="username">Username:</label>-->
-<!--            <input type="text" id="username" name="username" required>-->
-
-<!--            <label for="password">Password:</label>-->
-<!--            <input type="password" id="password" name="password" required>-->
-
-<!--            <button type="submit">Add Admin</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--    <div class="admin-list-section">-->
-<!--        <h2>All Admins</h2>-->
-<!--        <button id="loadAdmins" onclick="loadAdmins()">Load Admins</button>-->
-<!--        <ul id="adminList"></ul>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--<script src="js/javascript.js"></script>-->
-<!--</body>-->
-<!--</html>-->

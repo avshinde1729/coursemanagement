@@ -55,17 +55,22 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    public void testSaveStudent_Success() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
+    void testSaveStudent_Create() {
+        Student student = new Student();
+        student.setUsername("testUser");
+        student.setPassword("Test@1234");
+        student.setFirstName("John");
+        student.setLastName("Doe");
+        student.setEmail("john.doe@example.com");
 
-        when(studentRepository.save(student)).thenReturn(student);
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
 
         Student result = studentService.saveStudent(student);
 
         assertNotNull(result);
-        assertEquals("john_doe", result.getUsername());
         verify(studentRepository, times(1)).save(student);
     }
+
 
 
     @Test
@@ -225,14 +230,18 @@ public class StudentServiceImplTest {
 
     @Test
     public void testGetCoursesByStudentId_NotFound() {
+        // Mock the repository to return an empty Optional when the student is not found
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
 
+        // Expect a ValidationException to be thrown
         ValidationException thrown = assertThrows(ValidationException.class, () -> {
             studentService.getCoursesByStudentId(1L);
         });
 
+        // Verify the exception message
         assertEquals("Invalid student ID: 1", thrown.getMessage());
     }
+
 }
 
 

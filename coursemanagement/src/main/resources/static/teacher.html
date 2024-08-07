@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Management</title>
+    <link rel="stylesheet" href="css/teacher.css">
+</head>
+<body>
+<div class="container">
+    <h1>Teacher Management</h1>
+
+    <h2>All Teachers</h2>
+    <button onclick="fetchAllTeachers()">Load All Teachers</button>
+    <div id="teachers-list"></div>
+
+    <h2>Add Teacher</h2>
+    <form id="add-teacher-form">
+        <input type="text" id="username" name="username" placeholder="Username" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="text" id="mobileNo" name="mobileNo" placeholder="Mobile Number">
+        <input type="text" id="address" name="address" placeholder="Address">
+        <button type="button" onclick="addTeacher()">Add Teacher</button>
+    </form>
+
+    <h2>Update Teacher</h2>
+    <form id="update-teacher-form">
+        <input type="text" id="update-teacher-id" name="teacherId" placeholder="Teacher ID" required>
+        <input type="text" id="update-username" name="username" placeholder="Username">
+        <input type="password" id="update-password" name="password" placeholder="Password">
+        <input type="text" id="update-firstName" name="firstName" placeholder="First Name">
+        <input type="text" id="update-lastName" name="lastName" placeholder="Last Name">
+        <input type="email" id="update-email" name="email" placeholder="Email">
+        <input type="text" id="update-mobileNo" name="mobileNo" placeholder="Mobile Number">
+        <input type="text" id="update-address" name="address" placeholder="Address">
+        <button type="button" onclick="updateTeacher()">Update Teacher</button>
+    </form>
+
+    <h2>Delete Teacher</h2>
+    <input type="text" id="delete-teacher-id" placeholder="Teacher ID">
+    <button onclick="deleteTeacher()">Delete Teacher</button>
+</div>
+
+<script src="js/teacher.js"></script>
+</body>
+</html>

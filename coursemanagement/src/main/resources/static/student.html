@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="css/student.css">
+</head>
+<body>
+<div class="container">
+    <h1>Student Management</h1>
+
+    <h2>All Students</h2>
+    <button onclick="fetchAllStudents()">Load All Students</button>
+    <div id="students-list"></div>
+
+    <h2>Add Student</h2>
+    <form id="add-student-form">
+        <input type="text" id="username" name="username" placeholder="Username" required>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="text" id="mobileNo" name="mobileNo" placeholder="Mobile Number">
+        <input type="text" id="address" name="address" placeholder="Address">
+        <input type="text" id="classDivision" name="classDivision" placeholder="Class Division">
+        <button type="button" onclick="addStudent()">Add Student</button>
+    </form>
+
+    <h2>Update Student</h2>
+    <form id="update-student-form">
+        <input type="text" id="update-student-id" name="studentId" placeholder="Student ID" required>
+        <input type="text" id="update-username" name="username" placeholder="Username">
+        <input type="password" id="update-password" name="password" placeholder="Password">
+        <input type="text" id="update-firstName" name="firstName" placeholder="First Name">
+        <input type="text" id="update-lastName" name="lastName" placeholder="Last Name">
+        <input type="email" id="update-email" name="email" placeholder="Email">
+        <input type="text" id="update-mobileNo" name="mobileNo" placeholder="Mobile Number">
+        <input type="text" id="update-address" name="address" placeholder="Address">
+        <input type="text" id="update-classDivision" name="classDivision" placeholder="Class Division">
+        <button type="button" onclick="updateStudent()">Update Student</button>
+    </form>
+
+    <h2>Delete Student</h2>
+    <input type="text" id="delete-student-id" placeholder="Student ID">
+    <button onclick="deleteStudent()">Delete Student</button>
+
+    <h2>View Courses by Student ID</h2>
+    <input type="text" id="student-courses-id" placeholder="Student ID">
+    <button onclick="fetchCoursesByStudentId()">View Courses</button>
+    <div id="student-courses-list"></div>
+</div>
+
+<script src="js/student.js"></script>
+</body>
+</html>
