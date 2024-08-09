@@ -1,8 +1,12 @@
-const API_URL = "http://localhost:8080/student";
+
+function getApiUrl(path) {
+    const BASE_URL = window.location.origin; // This will be "http://localhost:8080" in your case
+    return `${BASE_URL}${path}`;
+}
 
 async function fetchAllStudents() {
     try {
-        const response = await fetch(`${API_URL}/all`);
+        const response = await fetch(getApiUrl("/student/all"));
         const students = await response.json();
         displayStudents(students);
     } catch (error) {
@@ -23,7 +27,7 @@ async function addStudent() {
     };
 
     try {
-        const response = await fetch(`${API_URL}/add`, {
+        const response = await fetch(getApiUrl("/student/add"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -54,34 +58,33 @@ async function updateStudent() {
         classDivision: document.getElementById("update-classDivision").value
     };
 
-            try {
-                const response = await fetch(`${API_URL}/${studentId}/update`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(updates)
-                });
-                if (response.ok) {
-                    alert("Student updated successfully!");
-                    fetchAllStudents();
-                    updateStudentForm.reset();
-                } else {
-                    const errorData = await response.json();
-                    alert(`Failed to update student: ${errorData.message}`);
-                }
-            } catch (error) {
-                console.error("Error updating student:", error);
-                alert("Error updating student.");
-            }
-
+    try {
+        const response = await fetch(getApiUrl(`/student/${studentId}/update`), {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updates)
+        });
+        if (response.ok) {
+            alert("Student updated successfully!");
+            fetchAllStudents();
+            updateStudentForm.reset();
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to update student: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error("Error updating student:", error);
+        alert("Error updating student.");
+    }
 }
 
 async function deleteStudent() {
     const studentId = document.getElementById("delete-student-id").value;
 
     try {
-        const response = await fetch(`${API_URL}/${studentId}`, {
+        const response = await fetch(getApiUrl(`/student/${studentId}`), {
             method: "DELETE"
         });
         if (response.ok) {
@@ -99,7 +102,7 @@ async function fetchCoursesByStudentId() {
     const studentId = document.getElementById("student-courses-id").value;
 
     try {
-        const response = await fetch(`${API_URL}/${studentId}/courses`);
+        const response = await fetch(getApiUrl(`/student/${studentId}/courses`));
         const courses = await response.json();
         displayCourses(courses);
     } catch (error) {

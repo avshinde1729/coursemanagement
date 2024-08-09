@@ -1,8 +1,11 @@
-const API_URL = "http://localhost:8080/teacher";
+function getApiUrl(path) {
+    const BASE_URL = window.location.origin;
+    return `${BASE_URL}${path}`;
+}
 
 async function fetchAllTeachers() {
     try {
-        const response = await fetch(`${API_URL}/all`);
+        const response = await fetch(getApiUrl("/teacher/all"));
         const teachers = await response.json();
         displayTeachers(teachers);
     } catch (error) {
@@ -22,7 +25,7 @@ async function addTeacher() {
     };
 
     try {
-        const response = await fetch(`${API_URL}/add`, {
+        const response = await fetch(getApiUrl("/teacher/add"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -53,7 +56,7 @@ async function updateTeacher() {
     };
 
     try {
-        const response = await fetch(`${API_URL}/update/${teacherId}`, {
+        const response = await fetch(getApiUrl(`/teacher/update/${teacherId}`), {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -75,7 +78,7 @@ async function deleteTeacher() {
     const teacherId = document.getElementById("delete-teacher-id").value;
 
     try {
-        const response = await fetch(`${API_URL}/${teacherId}`, {
+        const response = await fetch(getApiUrl(`/teacher/${teacherId}`), {
             method: "DELETE"
         });
         if (response.ok) {

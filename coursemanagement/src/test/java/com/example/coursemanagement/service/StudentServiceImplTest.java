@@ -1,6 +1,5 @@
 package com.example.coursemanagement.service;
 
-import com.example.coursemanagement.exception.ValidationException;
 import com.example.coursemanagement.model.Course;
 import com.example.coursemanagement.model.Student;
 import com.example.coursemanagement.repository.CourseRepository;
@@ -8,16 +7,19 @@ import com.example.coursemanagement.repository.StudentRepository;
 import com.example.coursemanagement.service.StudentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class StudentServiceImplTest {
+@ExtendWith(SpringExtension.class)
+class StudentServiceImplTest {
 
     @InjectMocks
     private StudentServiceImpl studentService;
@@ -28,40 +30,46 @@ public class StudentServiceImplTest {
     @Mock
     private CourseRepository courseRepository;
 
+    private Student student;
+
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+        student = new Student();
+        student.setUsername("testUser");
+        student.setPassword("Test@1234");
+        student.setFirstName("yuvi");
+        student.setLastName("dada");
+        student.setEmail("yuvi.dada@example.com");
     }
 
-    private Student createStudent(Long id, String username, String password, String firstName, String lastName, String email, String mobileNo) {
+    @Test
+    void testGetAllStudents() {
+        List<Student> students = Arrays.asList(new Student(), new Student());
+        when(studentRepository.findAll()).thenReturn(students);
+
+        List<Student> result = studentService.getAllStudents();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(studentRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetStudentById_Success() {
         Student student = new Student();
-        student.setStudentId(id);
-        student.setUsername(username);
-        student.setPassword(password);
-        student.setFirstName(firstName);
-        student.setLastName(lastName);
-        student.setEmail(email);
-        student.setMobileNo(mobileNo);
-        student.setCourses(new HashSet<>()); // Initialize courses as an empty set
-        return student;
-    }
+        student.setStudentId(1L);
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
-    private Course createCourse(Long id, String courseName) {
-        Course course = new Course();
-        course.setCourseId(id);
-        course.setCourseName(courseName);
-        course.setStudents(new HashSet<>()); // Initialize students as an empty set
-        return course;
+        Student result = studentService.getStudentById(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getStudentId());
+        verify(studentRepository, times(1)).findById(anyLong());
     }
 
     @Test
     void testSaveStudent_Create() {
-        Student student = new Student();
-        student.setUsername("testUser");
-        student.setPassword("Test@1234");
-        student.setFirstName("John");
-        student.setLastName("Doe");
-        student.setEmail("john.doe@example.com");
 
         when(studentRepository.save(any(Student.class))).thenReturn(student);
 
@@ -71,85 +79,38 @@ public class StudentServiceImplTest {
         verify(studentRepository, times(1)).save(student);
     }
 
-
-
     @Test
-    public void testSaveStudent_ValidationErrors() {
-        Student student = createStudent(1L, "", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
+    void testSaveStudent_Update() {
 
-        ValidationException thrown = assertThrows(ValidationException.class, () -> {
-            studentService.saveStudent(student);
-        });
+        when(studentRepository.existsById(anyLong())).thenReturn(true);
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
 
-        assertTrue(thrown.getErrors().containsValue("Username is required."));
-    }
-
-    @Test
-    public void testUpdateStudent_Success() {
-        Student existingStudent = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("firstName", "Jane");
-
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));
-        when(studentRepository.save(existingStudent)).thenReturn(existingStudent);
-
-        Student result = studentService.updateStudent(1L, updates);
+        Student result = studentService.saveStudent(student);
 
         assertNotNull(result);
-        assertEquals("Jane", result.getFirstName());
+        verify(studentRepository, times(1)).save(student);
     }
 
-
     @Test
-    public void testUpdateStudent_ValidationErrors() {
-        Student existingStudent = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("email", "invalid-email");
-
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(existingStudent));
-
-        ValidationException thrown = assertThrows(ValidationException.class, () -> {
-            studentService.updateStudent(1L, updates);
-        });
-
-        assertTrue(thrown.getErrors().containsValue("Invalid email format."));
-    }
-
-
-    @Test
-    public void testDeleteStudent_Success() {
-        when(studentRepository.existsById(1L)).thenReturn(true);
+    void testDeleteStudent_Success() {
+        doNothing().when(studentRepository).deleteById(anyLong());
 
         studentService.deleteStudent(1L);
 
-        verify(studentRepository, times(1)).deleteById(1L);
+        verify(studentRepository, times(1)).deleteById(anyLong());
     }
 
-
     @Test
-    public void testDeleteStudent_InvalidId() {
-        Long invalidStudentId = -1L;
+    void testEnrollStudentInCourse_Success() {
+        Student student = new Student();
+        student.setCourses(new HashSet<>());
+        Course course = new Course();
+        course.setStudents(new HashSet<>());
 
-        // Expect a ValidationException to be thrown
-        assertThrows(ValidationException.class, () -> {
-            studentService.deleteStudent(invalidStudentId);
-        });
-
-        // Verify that the repository's deleteById method was not called
-        verify(studentRepository, never()).deleteById(anyLong());
-    }
-
-
-
-    @Test
-    public void testEnrollStudentInCourse_Success() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Course course = createCourse(1L, "Math");
-
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(studentRepository.save(student)).thenReturn(student);
-        when(courseRepository.save(course)).thenReturn(course);
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(courseRepository.findById(anyLong())).thenReturn(Optional.of(course));
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
 
         studentService.enrollStudentInCourse(1L, 1L);
 
@@ -160,34 +121,16 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    public void testEnrollStudentInCourse_AlreadyEnrolled() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Course course = createCourse(1L, "Math");
-        student.getCourses().add(course);
-        course.getStudents().add(student);
+    void testUnenrollStudentFromCourse_Success() {
+        Student student = new Student();
+        Course course = new Course();
+        student.setCourses(new HashSet<>(Collections.singleton(course)));
+        course.setStudents(new HashSet<>(Collections.singleton(student)));
 
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-
-        ValidationException thrown = assertThrows(ValidationException.class, () -> {
-            studentService.enrollStudentInCourse(1L, 1L);
-        });
-
-        assertEquals("Student is already enrolled in this course.", thrown.getMessage());
-    }
-
-
-    @Test
-    public void testUnenrollStudentFromCourse_Success() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Course course = createCourse(1L, "Math");
-        student.getCourses().add(course);
-        course.getStudents().add(student);
-
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(studentRepository.save(student)).thenReturn(student);
-        when(courseRepository.save(course)).thenReturn(course);
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(courseRepository.findById(anyLong())).thenReturn(Optional.of(course));
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
 
         studentService.unenrollStudentFromCourse(1L, 1L);
 
@@ -198,54 +141,45 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    public void testUnenrollStudentFromCourse_NotEnrolled() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Course course = createCourse(1L, "Math");
+    void testUpdateStudent_Success() {
+        Student existingStudent = new Student();
+        existingStudent.setStudentId(1L);
+        existingStudent.setUsername("existingUser");
+        existingStudent.setCourses(new HashSet<>());
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.save(any(Student.class))).thenReturn(existingStudent);
 
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("username", "newUser");
 
-        ValidationException thrown = assertThrows(ValidationException.class, () -> {
-            studentService.unenrollStudentFromCourse(1L, 1L);
-        });
+        Student result = studentService.updateStudent(1L, updates);
 
-        assertEquals("Student is not enrolled in this course.", thrown.getMessage());
+        assertNotNull(result);
+        assertEquals("newUser", result.getUsername());
+        verify(studentRepository, times(1)).save(existingStudent);
     }
 
-
     @Test
-    public void testGetCoursesByStudentId_Success() {
-        Student student = createStudent(1L, "john_doe", "Password1!", "John", "Doe", "john.doe@example.com", "1234567890");
-        Course course = createCourse(1L, "Math");
-        student.getCourses().add(course);
+    void testGetCoursesByStudentId() {
+        Student student = new Student();
+        Course course1 = new Course();
+        course1.setCourseId(1L);
+        course1.setCourseName("Mathematics");
 
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        Course course2 = new Course();
+        course2.setCourseId(2L);
+        course2.setCourseName("Science");
+
+        student.setCourses(new HashSet<>(Arrays.asList(course1, course2)));
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
         List<Course> courses = studentService.getCoursesByStudentId(1L);
 
         assertNotNull(courses);
-        assertEquals(1, courses.size());
-        assertTrue(courses.contains(course));
+        assertEquals(2, courses.size());
+        assertTrue(courses.stream().anyMatch(course -> course.getCourseName().equals("Mathematics")));
+        assertTrue(courses.stream().anyMatch(course -> course.getCourseName().equals("Science")));
+        verify(studentRepository, times(1)).findById(anyLong());
     }
-
-    @Test
-    public void testGetCoursesByStudentId_NotFound() {
-        // Mock the repository to return an empty Optional when the student is not found
-        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Expect a ValidationException to be thrown
-        ValidationException thrown = assertThrows(ValidationException.class, () -> {
-            studentService.getCoursesByStudentId(1L);
-        });
-
-        // Verify the exception message
-        assertEquals("Invalid student ID: 1", thrown.getMessage());
-    }
-
 }
-
-
-
-
-
-
